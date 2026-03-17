@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: techub-db
+    environment:
+      POSTGRES_DB: techub
+      POSTGRES_USER: techub_user
+      POSTGRES_PASSWORD: techub_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - techub_data:/var/lib/postgresql/data
+
+volumes:
+  techub_data:
