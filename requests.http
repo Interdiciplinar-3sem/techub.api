@@ -1,0 +1,14 @@
+@baseUrl = http://localhost:3000
+
+### 1) Hello World
+GET {{baseUrl}}/HelloWorld
+Accept: text/plain
+
+### 2) Criar usuario (valores fixos no controller)
+POST {{baseUrl}}/users
+Accept: application/json
+
+### 3) Listar usuarios
+GET {{baseUrl}}/users
+Accept: application/json
+
