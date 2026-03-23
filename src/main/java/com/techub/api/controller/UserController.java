@@ -12,15 +12,15 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private UserService service;
+    private UserService userService;
 
     @PostMapping
-    public User cadastrar(@RequestBody User user) {
-        return service.cadastrar(user);
+    public User criar(@RequestBody User user) {
+        return userService.criarUsuario(user);
     }
 
     @GetMapping
     public List<User> listar() {
-        return service.listar();
+        return userService.listar();
     }
 }
