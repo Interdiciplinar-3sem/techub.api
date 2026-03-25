@@ -2,42 +2,36 @@ package com.techub.api.service;
 
 import com.techub.api.domain.User;
 import com.techub.api.repository.UserRepository;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
 @Service
 public class UserService {
-    private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository){
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    private UserRepository userRepository;
 
-    @Transactional
-    public User criar(User user){
-        Optional<User> existUser = userRepository.findByEmail(user.getEmail());
-        return existUser.orElseGet(() -> userRepository.save(user));
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    @Transactional
-    public void deletar(UUID userId){
-        userRepository.deleteById(userId);
-    }
+    public User criarUsuario(User user) {
 
-    @Transactional(readOnly = true)
-    public List<User> listar(){
-        return userRepository.findAll();
-    }
-
-    @Transactional
-    public User atualizar(UUID userId, User dto){
-        if(userId.equals(dto.getId())){
-            return userRepository.save(dto);
+        // valida email
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new RuntimeException("Email já cadastrado");
         }
-        return null;
+
+        // hash da senha
+        String senhaHash = passwordEncoder.encode(user.getSenha());
+        user.setSenha(senhaHash);
+
+        // salva
+        return userRepository.save(user);
+    }
+
+    public List<User> listar() {
+        return userRepository.findAll();
     }
 }
