@@ -3,7 +3,7 @@ package com.techub.api.domain;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "usuarios")
+@Table(name = "tb_usuarios")
 public class User {
 
     @Id
@@ -11,6 +11,8 @@ public class User {
     private Long id;
 
     private String nome;
+
+    //Status status;  para implementar hierarquia de acessos
 
     private String email;
 
@@ -30,6 +32,11 @@ public class User {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+   /* public Status getStatus() {return status;}
+    public void setStatus(Status status) {this.status = status;}
+
+    */
 
     public String getEmail() {
         return email;
