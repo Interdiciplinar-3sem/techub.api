@@ -1,6 +1,9 @@
 package com.techub.api.service;
 
+import com.techub.api.domain.Role;
+import com.techub.api.domain.Student;
 import com.techub.api.domain.User;
+import com.techub.api.dto.UserRequestDTO;
 import com.techub.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +36,22 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User cadastrarAluno(UserRequestDTO dto){
+        User user = new User();
+        user.setEmail(dto.email());
+        user.setSenha(dto.senha());
+
+        Student student = new Student();
+        student.setNome(dto.nome());
+        student.setBio(dto.bio());
+        student.setFoto(dto.foto());
+
+        user.setStudent(student);
+        user.setRole(Role.Aluno);
+
+        return criarUsuario(user);
+    }
+
     public List<User> listar() {
         return userRepository.findAll();
     }
@@ -43,11 +62,5 @@ public class UserService {
 
     public void deletar(Long id) {
         userRepository.deleteById(id);
-    }
-
-    public Integer obter_pontuacao(Long id){
-        return buscar_por_id(id)
-                .map(User::getPontuacao)
-                .orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
     }
 }

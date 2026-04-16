@@ -1,4 +1,4 @@
-package com.techub.api.domain;
+package com.techub.api;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

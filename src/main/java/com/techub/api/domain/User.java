@@ -14,22 +14,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String nome;
-
     @Column(unique = true, nullable = false)
     private String email;
 
     @Column(nullable = false)
     private String senha;
 
-    private Integer semestre = 1;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private Role role = Role.Aluno;
 
-    @Column(nullable = true)
-    private String bio;
-
-    @Column(nullable = true)
-    private String foto;
-
-    private Integer pontuacao = 0;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "student_id", unique = true)
+    private Student student;
 }

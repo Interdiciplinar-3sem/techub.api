@@ -1,7 +1,10 @@
 package com.techub.api.controller;
 
+import com.techub.api.domain.Role;
+import com.techub.api.domain.Student;
 import com.techub.api.domain.User;
 
+import com.techub.api.dto.UserRequestDTO;
 import com.techub.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +19,12 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public User criar(@RequestBody User user) {
-        return userService.criarUsuario(user);
+    public User criar_usuario_aluno(@RequestBody UserRequestDTO dto) {
+        return userService.cadastrarAluno(dto);
     }
 
     @GetMapping
     public List<User> listarUser() {
-
         return userService.listar();
     }
 
@@ -36,7 +38,4 @@ public class UserController {
     public void deletarUserPorId(@PathVariable Long id) {
         userService.deletar(id);
     }
-
-    @GetMapping("/pontuacao/{id}")
-    public Integer obterPontuacao(@PathVariable Long id){ return userService.obter_pontuacao(id); }
 }

@@ -1,6 +1,6 @@
 package com.techub.api.domain
 //hierarquizar acessos
-enum class Status {
+enum class Role {
     Aluno,
     Professor,
     ADM
