@@ -1,4 +1,4 @@
-@baseUrl = http://localhost:3000
+@baseUrl = http://localhost:8080
 
 ### 1) Hello World
 GET {{baseUrl}}/HelloWorld
@@ -11,7 +11,6 @@ Accept: application/json
 ### 3) Listar usuarios
 GET {{baseUrl}}/users
 Accept: application/json
-
 
 POST http://localhost:8080/usuarios
 Content-Type: application/json

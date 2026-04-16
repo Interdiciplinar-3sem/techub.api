@@ -7,6 +7,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -33,5 +35,19 @@ public class UserService {
 
     public List<User> listar() {
         return userRepository.findAll();
+    }
+
+    public Optional<User> buscar_por_id(Long id) {
+        return userRepository.findById(id);
+    }
+
+    public void deletar(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    public Integer obter_pontuacao(Long id){
+        return buscar_por_id(id)
+                .map(User::getPontuacao)
+                .orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
     }
 }

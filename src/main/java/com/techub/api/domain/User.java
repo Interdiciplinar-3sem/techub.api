@@ -1,56 +1,35 @@
 package com.techub.api.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "tb_usuarios")
+@Getter
+@Setter
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String nome;
 
-    //Status status;  para implementar hierarquia de acessos
-
+    @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String senha;
 
+    private Integer semestre = 1;
 
-    // getters e setters
+    @Column(nullable = true)
+    private String bio;
 
-    public Long getId() {
-        return id;
-    }
+    @Column(nullable = true)
+    private String foto;
 
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-   /* public Status getStatus() {return status;}
-    public void setStatus(Status status) {this.status = status;}
-
-    */
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
+    private Integer pontuacao = 0;
 }

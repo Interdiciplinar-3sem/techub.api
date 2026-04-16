@@ -1,4 +1,4 @@
-package com.techub.api.domain;
+package com.techub.api.controller;
 
 import com.techub.api.domain.User;
 import com.techub.api.repository.UserRepository;
