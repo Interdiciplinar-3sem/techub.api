@@ -3,11 +3,14 @@ package com.techub.api.service;
 import com.techub.api.domain.Role;
 import com.techub.api.domain.Student;
 import com.techub.api.domain.User;
-import com.techub.api.dto.UserRequestDTO;
+import com.techub.api.dto.UserCreateStudentRequestDTO;
+import com.techub.api.dto.UserRoleResponse;
+import com.techub.api.dto.UserLoginDataDTO;
 import com.techub.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +39,8 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User cadastrarAluno(UserRequestDTO dto){
+    @Transactional
+    public User cadastrarAluno(UserCreateStudentRequestDTO dto){
         User user = new User();
         user.setEmail(dto.email());
         user.setSenha(dto.senha());
@@ -52,6 +56,16 @@ public class UserService {
         return criarUsuario(user);
     }
 
+    public void atualizar_dados_login(Long id, UserLoginDataDTO dto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException(("Erro ao buscar usuario!")));
+
+        if(dto.email() != null) { user.setEmail(dto.email()); }
+        if(dto.senha() != null) { user.setSenha(dto.senha()); }
+
+        userRepository.save(user);
+    }
+
     public List<User> listar() {
         return userRepository.findAll();
     }
@@ -62,5 +76,15 @@ public class UserService {
 
     public void deletar(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public UserRoleResponse descobrirRole(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException(("Erro ao buscar usuario!")));
+
+        if(user.getStudent() != null) {
+            return new UserRoleResponse(user.getStudent().getId(), user.getRole());
+        }
+        throw new RuntimeException("Não foi possivel encontrar o role");
     }
 }
