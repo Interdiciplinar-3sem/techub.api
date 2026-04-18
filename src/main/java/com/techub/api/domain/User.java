@@ -1,8 +1,11 @@
 package com.techub.api.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "tb_usuarios")
@@ -27,4 +30,8 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "student_id", unique = true)
     private Student student;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Summary> summaries;
 }

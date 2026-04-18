@@ -19,7 +19,8 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public User criar_usuario_aluno(@RequestBody UserCreateStudentRequestDTO dto) { return userService.cadastrarAluno(dto); }
+    public User criar_usuario_aluno(@RequestBody UserCreateStudentRequestDTO dto) {
+        return userService.cadastrarAluno(dto); }
 
     @GetMapping
     public List<User> listarUser() {
@@ -29,6 +30,7 @@ public class UserController {
     //localhost:8080/api/usuarios/3
     @GetMapping("/{id}")
     public User buscarUserPorId(@PathVariable Long id) {
+
         return userService.buscar_por_id(id).orElse(null);
     }
 
@@ -47,6 +49,7 @@ public class UserController {
 
     @GetMapping("/role/{id}")
     public UserRoleResponse descobrirRole(@PathVariable Long id) {
+
         return userService.descobrirRole(id);
     }
 
