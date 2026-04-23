@@ -25,7 +25,7 @@ public class JwtService {
     @Value("${security.jwt-expiration-time}")
     private long jwtExpiration; // 60 * 60
 
-    private String generateToken(String email){
+    public String generateToken(String email){
         return Jwts
                 .builder()
                 .setSubject(email)
@@ -36,7 +36,7 @@ public class JwtService {
     }
 
     // Aviso de metodo deprecated
-    private String extractEmail(String token){
+    public String extractEmail(String token){
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSignUpKey())
@@ -46,7 +46,7 @@ public class JwtService {
                 .getSubject();
     }
 
-    private Boolean isTokenValid(String token, UserDetails userDetails){
+    public Boolean isTokenValid(String token, UserDetails userDetails){
         try {
             String userName = extractEmail(token);
             return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
@@ -55,7 +55,7 @@ public class JwtService {
         }
     }
 
-    private Date getExpirationTime(String token){
+    public Date getExpirationTime(String token){
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSignUpKey())
@@ -66,7 +66,7 @@ public class JwtService {
     }
 
 
-    public Boolean isTokenExpired(String token){
+    private Boolean isTokenExpired(String token){
         Date expiration = getExpirationTime(token);
         return expiration.before(new Date());
     }
