@@ -51,7 +51,7 @@ public class UserService {
         student.setFoto(dto.foto());
 
         user.setStudent(student);
-        user.setRole(Role.Aluno);
+        user.setRole(Role.ALUNO);
 
         return criarUsuario(user);
     }
@@ -61,7 +61,7 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException(("Erro ao buscar usuario!")));
 
         if(dto.email() != null) { user.setEmail(dto.email()); }
-        if(dto.senha() != null) { user.setSenha(dto.senha()); }
+        if(dto.senha() != null) {  user.setSenha(passwordEncoder.encode(dto.senha())); }
 
         userRepository.save(user);
     }
