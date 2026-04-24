@@ -6,7 +6,9 @@ import com.techub.api.domain.User;
 import com.techub.api.dto.UserCreateStudentRequestDTO;
 import com.techub.api.dto.UserRoleResponse;
 import com.techub.api.dto.UserLoginDataDTO;
+import com.techub.api.exception.EmailAlredyExistsExeception;
 import com.techub.api.repository.UserRepository;
+import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,7 +30,7 @@ public class UserService {
 
         // valida email
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Email já cadastrado");
+            throw new EmailAlredyExistsExeception();
         }
 
         // hash da senha
