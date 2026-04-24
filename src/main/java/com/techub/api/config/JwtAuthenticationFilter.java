@@ -3,6 +3,7 @@ package com.techub.api.config;
 import com.techub.api.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
@@ -43,15 +44,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        final String token = request.getHeader("Authorization");
+        String jwt = null;
+        Cookie[] cookies = request.getCookies();
 
-        if(token == null || !token.startsWith("Bearer ")) {
+        if(cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("accessToken".equals(cookie.getName())) {
+                    jwt = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        String tokenHeader = request.getHeader("Authorization");
+
+        if(jwt == null && tokenHeader != null && tokenHeader.startsWith("Bearer ")) {  jwt = tokenHeader.substring(7); }
+
+        if (jwt == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
         try {
-            final String jwt = token.substring(7);
             final String userName = jwtService.extractEmail(jwt);
 
             final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

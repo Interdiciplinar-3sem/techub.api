@@ -1,34 +1,43 @@
 package com.techub.api.controller;
 
 import com.techub.api.domain.User;
-import com.techub.api.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import com.techub.api.dto.UserLoginDataDTO;
+import com.techub.api.dto.UserLoginResponse;
+import com.techub.api.service.AuthenticationService;
+import com.techub.api.service.JwtService;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-//verifica se credenciais existem no banco de dados
-    @Autowired
-    private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final AuthenticationService authenticationService;
+    private final JwtService jwtService;
+
+    public AuthController(
+            AuthenticationService authenticationService,
+            JwtService jwtService
+    ) {
+        this.authenticationService = authenticationService;
+        this.jwtService = jwtService;
+    }
 
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
+    public ResponseEntity<?> login(@RequestBody UserLoginDataDTO dto, HttpServletResponse response) {
 
-        User usuario = userRepository.findAll()
-                .stream()
-                .filter(u -> u.getEmail().equals(user.getEmail()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        User user = authenticationService.authentication(dto);
+        String token = jwtService.generateToken(user.getEmail());
 
-        if (!passwordEncoder.matches(user.getSenha(), usuario.getSenha())) {
-            throw new RuntimeException("Senha inválida");
-        }
+        response.addHeader("Set-Cookie",
+                "accessToken=" + token +
+                "; HttpOnly" +
+                "; Path=/" +
+                "; Max-Age=3600" +
+                "; SameSite=Lax"
+        );
 
-        return "Login realizado com sucesso";
+        return ResponseEntity.ok(new UserLoginResponse("Sucesso ao criar o token", token));
     }
 }

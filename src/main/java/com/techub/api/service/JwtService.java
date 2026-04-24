@@ -22,7 +22,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    @Value("${security.jwt-expiration-time}")
+    @Value("${security.jwt.expiration-time}")
     private long jwtExpiration; // 60 * 60
 
     public String generateToken(String email){
