@@ -1,8 +1,10 @@
 package com.techub.api.controller;
 
 import com.techub.api.domain.User;
+import com.techub.api.dto.AuthResponse;
 import com.techub.api.dto.UserLoginDataDTO;
 import com.techub.api.dto.UserLoginResponse;
+import com.techub.api.dto.UserLogoutResponse;
 import com.techub.api.service.AuthenticationService;
 import com.techub.api.service.JwtService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,9 +37,30 @@ public class AuthController {
                 "; HttpOnly" +
                 "; Path=/" +
                 "; Max-Age=3600" +
-                "; SameSite=Lax"
+                "; Secure" +
+                "; SameSite=None"
         );
 
         return ResponseEntity.ok(new UserLoginResponse("Sucesso ao criar o token", token));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+
+        response.addHeader("Set-Cookie",
+                "accessToken=" + "" +
+                        "; HttpOnly" +
+                        "; Path=/" +
+                        "; Max-Age=0" +
+                        "; Secure" +
+                        "; SameSite=None"
+        );
+
+        return ResponseEntity.ok(new UserLogoutResponse("Sucesso ao fazer loogut"));
+    }
+
+    @GetMapping
+    public ResponseEntity<?> auth(){
+        return ResponseEntity.ok(new AuthResponse(true));
     }
 }

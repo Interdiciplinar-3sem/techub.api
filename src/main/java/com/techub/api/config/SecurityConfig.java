@@ -42,7 +42,7 @@ public class SecurityConfig {
                .cors(cors -> {})
                .csrf(csrf -> csrf.disable())
                .authorizeHttpRequests(auth -> auth
-                       .requestMatchers("/auth/**").permitAll()
+                       .requestMatchers("/auth/login").permitAll()
                        .requestMatchers(HttpMethod.POST, "/user").permitAll()
                        .anyRequest().authenticated()
                )

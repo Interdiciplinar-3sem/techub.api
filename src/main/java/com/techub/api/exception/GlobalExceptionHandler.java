@@ -20,6 +20,17 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler (InvalidCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handdleInvalidCredentials(InvalidCredentialsException ex) {
+        return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                new ErrorResponse(
+                        401,
+                        "INVALID_CREDENTIALS",
+                        ex.getMessage()
+                )
+        );
+    }
+
     //para mostar mensagem de erro
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntime(RuntimeException ex) {
