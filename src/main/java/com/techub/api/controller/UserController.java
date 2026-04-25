@@ -2,11 +2,13 @@ package com.techub.api.controller;
 
 import com.techub.api.domain.User;
 
+import com.techub.api.dto.UserCreateResponseDTO;
 import com.techub.api.dto.UserCreateStudentRequestDTO;
 import com.techub.api.dto.UserRoleResponse;
 import com.techub.api.dto.UserLoginDataDTO;
 import com.techub.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +21,10 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public User criar_usuario_aluno(@RequestBody UserCreateStudentRequestDTO dto) { return userService.cadastrarAluno(dto); }
+    public ResponseEntity<?> criar_usuario_aluno(@RequestBody UserCreateStudentRequestDTO dto) {
+        User user = userService.cadastrarAluno(dto);
+        return ResponseEntity.ok( new UserCreateResponseDTO("Usuario criado com sucesso", user.getId()));
+    }
 
     @GetMapping
     public List<User> listarUser() {
