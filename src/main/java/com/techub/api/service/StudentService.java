@@ -29,7 +29,26 @@ public class StudentService {
 
     public List<Student> listar() { return studentRepository.findAll(); }
 
-    public Student buscar_perfil(Long id) { return studentRepository.findById(id).orElseThrow(() -> new RuntimeException(("Erro ao buscar usuario"))); }
+    public Student buscar_perfilId(Long id) { return studentRepository.findById(id).orElseThrow(() -> new RuntimeException(("Erro ao buscar usuario"))); }
+
+    public Student buscar_perfilEmail(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(
+                        org.springframework.http.HttpStatus.NOT_FOUND,
+                        "Usuário não encontrado"
+                ));
+
+        Student student = user.getStudent();
+        if (student == null) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.NOT_FOUND,
+                    "Perfil de estudante não vinculado ao usuário"
+            );
+        }
+
+        return student;
+    }
 
     @Transactional
     public void atualizar_perfil(Long id, UserUpdateStudentRequestDTO dto) {
