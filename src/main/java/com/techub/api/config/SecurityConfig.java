@@ -43,7 +43,10 @@ public class SecurityConfig {
                .csrf(csrf -> csrf.disable())
                .authorizeHttpRequests(auth -> auth
                        .requestMatchers("/auth/login").permitAll()
+                       .requestMatchers("/resumos/**").permitAll() //para testar os resumos TEMPORARIO
                        .requestMatchers(HttpMethod.POST, "/user").permitAll()
+                       .requestMatchers("/health").permitAll()
+                       .requestMatchers("/docs/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                        .anyRequest().authenticated()
                )
                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

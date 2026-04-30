@@ -7,9 +7,12 @@ import com.techub.api.dto.UserLoginResponse;
 import com.techub.api.dto.UserLogoutResponse;
 import com.techub.api.service.AuthenticationService;
 import com.techub.api.service.JwtService;
+import com.techub.api.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/auth")
@@ -18,12 +21,16 @@ public class AuthController {
     private final AuthenticationService authenticationService;
     private final JwtService jwtService;
 
+    private final UserService userService;
+
     public AuthController(
             AuthenticationService authenticationService,
-            JwtService jwtService
+            JwtService jwtService,
+            UserService userService
     ) {
         this.authenticationService = authenticationService;
         this.jwtService = jwtService;
+        this.userService = userService;
     }
 
     @PostMapping("/login")
@@ -60,7 +67,18 @@ public class AuthController {
     }
 
     @GetMapping
-    public ResponseEntity<?> auth(){
-        return ResponseEntity.ok(new AuthResponse(true));
+    public ResponseEntity<?> auth(@CookieValue(name = "accessToken", required = false) String token){
+        if(token == null || token.isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Token ausente"
+            );
+        }
+
+        String userEmail = jwtService.extractEmail(token);
+        User user = userService.buscar_por_email(userEmail)
+                .orElseThrow(() -> new RuntimeException("Não foi possivel encotrar email"));
+
+        return ResponseEntity.ok(new AuthResponse(true, user.getId()));
     }
 }

@@ -3,9 +3,12 @@ package com.techub.api.controller;
 import com.techub.api.domain.Student;
 import com.techub.api.dto.UserLoginDataDTO;
 import com.techub.api.dto.UserUpdateStudentRequestDTO;
+import com.techub.api.service.JwtService;
 import com.techub.api.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -15,6 +18,9 @@ public class StudentController {
 
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+    private JwtService jwtService;
 
     @GetMapping("/pontuacao/{id}")
     public Integer obterPontuacao(@PathVariable Long id){ return studentService.obter_pontuacao(id); }
@@ -31,7 +37,21 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
-    public Student busarPerfil(@PathVariable Long id) { return studentService.buscar_perfil(id); }
+    public Student busarPerfilId(@PathVariable Long id) { return studentService.buscar_perfilId(id); }
+
+    @GetMapping("/me")
+    public Student busarPerfilToken(@CookieValue(name = "accessToken", required = false) String token) {
+        if(token == null || token.isBlank()) {
+            throw  new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Token ausente"
+            );
+        }
+
+        String email = jwtService.extractEmail(token);
+
+        return studentService.buscar_perfilEmail(email);
+    }
 
     // ainda não está apagando por conta do cascade
     @DeleteMapping("/{id}")

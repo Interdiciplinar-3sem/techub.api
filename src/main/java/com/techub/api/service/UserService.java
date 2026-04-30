@@ -76,6 +76,10 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    public Optional<User> buscar_por_email(String email) {
+        return userRepository.findByEmail(email);
+    }
+
     public void deletar(Long id) {
         userRepository.deleteById(id);
     }
