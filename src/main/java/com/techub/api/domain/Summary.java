@@ -17,6 +17,7 @@ public class Summary {
     private String titulo;
     private String conteudo;
 
-
-
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
 }

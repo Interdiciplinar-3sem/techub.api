@@ -1,6 +1,9 @@
 package com.techub.api.controller;
 
 import com.techub.api.domain.Summary;
+import com.techub.api.dto.SummaryCreateRequestDTO;
+import com.techub.api.dto.SummaryGetResponseDTO;
+import com.techub.api.dto.SummaryUpdateRequestDTO;
 import com.techub.api.service.SummaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,31 +22,32 @@ public class SummaryController {
     private SummaryService service;
 
     @PostMapping
-    public ResponseEntity<?> criar(@RequestBody Summary summary) {
+    public ResponseEntity<?> criar(@RequestBody SummaryCreateRequestDTO dto) {
         try {
-            return ResponseEntity.ok(service.saveSummary(summary));
+            return ResponseEntity.ok(service.saveSummary(dto));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @GetMapping
-    public List<Summary> listar() {
+    public List<SummaryGetResponseDTO> listar() {
         return service.getAll();
     }
 
     @GetMapping("/{id}")
-    public Summary buscar(@PathVariable Long id) {
+    public SummaryGetResponseDTO buscar(@PathVariable Long id) {
         return service.getById(id);
     }
 
     @PutMapping("/{id}")
-    public Summary atualizar(@PathVariable Long id, @RequestBody Summary summary) {
-        return service.update(id, summary);
+    public SummaryGetResponseDTO atualizar(@PathVariable Long id, @RequestBody SummaryUpdateRequestDTO dto) {
+        return service.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
+    public ResponseEntity<?> deletar(@PathVariable Long id) {
         service.delete(id);
+        return ResponseEntity.ok("Sucesso ao criar ao apagar Resumo");
     }
 }
