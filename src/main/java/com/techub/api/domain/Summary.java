@@ -14,7 +14,10 @@ public class Summary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String titulo;
+
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String conteudo;
 
     @ManyToOne

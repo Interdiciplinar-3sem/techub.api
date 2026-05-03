@@ -23,7 +23,7 @@ public class SummaryService {
     @Autowired
     private StudentRepository studentRepository;
 
-    public SummaryCreateResponseDTO saveSummary(SummaryCreateRequestDTO dto) {
+    public SummaryCreateResponseDTO saveSummary(SummaryCreateRequestDTO dto, Long id) {
 
         if (dto.titulo() == null || dto.titulo().isEmpty()) {
             throw new IllegalArgumentException("Título é obrigatório");
@@ -33,7 +33,7 @@ public class SummaryService {
             throw new IllegalArgumentException("Conteudo é obrigatório");
         }
 
-        Student student = studentRepository.findById(dto.studentId())
+        Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Estudante não encontrado!"));
 
         Student studentId = studentRepository.getReferenceById(student.getId());
