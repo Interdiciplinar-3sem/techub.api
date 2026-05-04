@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 
+
 public class Student {
 
     @Id
@@ -25,6 +26,10 @@ public class Student {
 
     @Column(nullable = true)
     private String foto;
+
+    @ManyToOne
+    @JoinColumn(name = "curso_atual_id")
+    private Course cursoAtual;
 
     private Integer pontuacao = 0;
 }
