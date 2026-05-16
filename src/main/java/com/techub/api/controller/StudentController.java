@@ -55,6 +55,12 @@ public class StudentController {
         return studentService.buscar_perfilEmail(email);
     }
 
+    @PatchMapping("/{id}")
+    public String atualizar_status_student(@PathVariable Long id){
+        studentService.deletar(id);
+        return "Status do Aluno alterado com sucesso!";
+    }
+
     // ainda não está apagando por conta do cascade
     @DeleteMapping("/{id}")
     public String deleter_student(@PathVariable Long id){

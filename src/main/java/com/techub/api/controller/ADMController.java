@@ -22,16 +22,4 @@ public class ADMController {
     public List<ADM> listar(){
         return admService.listar_adm();
     }
-
-    @PatchMapping("/desativar")
-    public ResponseEntity<?> desativar_adm(@PathVariable Long id){
-        admService.desativar_adm(id);
-        return ResponseEntity.ok("Sucesso ao desativar ADM");
-    }
-
-    @PatchMapping("/ativar")
-    public ResponseEntity<?> ativar_adm(@PathVariable Long id){
-        admService.ativar(id);
-        return ResponseEntity.ok("Sucesso ao ativar ADM");
-    }
 }

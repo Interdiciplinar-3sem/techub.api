@@ -32,6 +32,8 @@ public class UserService {
 
     public User criarUsuario(User user) {
 
+        user.setAtivo(true);
+
         // valida email
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new EmailAlredyExistsExeception();
@@ -93,15 +95,31 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public List<UserGetResponseDTO> listar() {
+    public List<UserGetResponseDTO> findByAtivoTrue() {
 
-        return userRepository.findAll()
+        return userRepository.findByAtivoTrue()
                 .stream()
                 .map(user -> new UserGetResponseDTO(
                         user.getId(),
+                        Optional.ofNullable(user.getStudent()).map(s -> s.getId()).orElse(null),
                         user.getEmail(),
                         user.getRole(),
-                        user.getCreatedAt()
+                        user.getCreatedAt(),
+                        user.getAtivo()
+                )).toList();
+    }
+
+    public List<UserGetResponseDTO> findByAtivoFalse() {
+
+        return userRepository.findByAtivoFalse()
+                .stream()
+                .map(user -> new UserGetResponseDTO(
+                        user.getId(),
+                        Optional.ofNullable(user.getStudent()).map(s -> s.getId()).orElse(null),
+                        user.getEmail(),
+                        user.getRole(),
+                        user.getCreatedAt(),
+                        user.getAtivo()
                 )).toList();
     }
 
@@ -115,6 +133,15 @@ public class UserService {
 
     public void deletar(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void atualizar_status(Long id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Erro ao procurar usuario"));
+
+        user.setAtivo(!user.getAtivo());
+        userRepository.save(user);
     }
 
     public UserRoleResponse descobrirRole(Long id) {

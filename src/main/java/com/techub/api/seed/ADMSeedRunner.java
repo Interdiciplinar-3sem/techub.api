@@ -1,6 +1,7 @@
 package com.techub.api.seed;
 
 import com.techub.api.domain.ADM;
+import com.techub.api.domain.Role;
 import com.techub.api.domain.User;
 import com.techub.api.dto.ADMCreateRequestDTO;
 import com.techub.api.exception.EmailAlredyExistsExeception;
@@ -31,10 +32,12 @@ public class ADMSeedRunner implements CommandLineRunner {
         String email = "devzevitor@gmail.com";
         String senha = "adm123";
 
-        boolean jaExiste = admRepository.existsByUsernameIgnoreCase(username)
-                || userRepository.existsByEmailIgnoreCase(email);
-
-        if(jaExiste) {
+        if (userRepository.existsByEmailIgnoreCase(email)) {
+            userRepository.findByEmail(email).ifPresent(user -> {
+                user.setAtivo(true);
+                user.setRole(Role.ADM);
+                userRepository.save(user);
+            });
             return;
         }
 

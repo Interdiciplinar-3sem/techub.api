@@ -34,6 +34,7 @@ public class Student {
     @JoinColumn(name = "curso_atual_id")
     private Course cursoAtual;
 
+    @Column
     private Integer pontuacao = 0;
 
     @OneToMany(mappedBy = "student")

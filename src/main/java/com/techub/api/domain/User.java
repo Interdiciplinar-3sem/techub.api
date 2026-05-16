@@ -27,6 +27,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String senha;
 
+    @Column
+    private Boolean ativo = true;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private Role role = Role.ALUNO;
