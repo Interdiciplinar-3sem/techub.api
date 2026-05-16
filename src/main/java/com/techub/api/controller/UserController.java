@@ -7,6 +7,7 @@ import com.techub.api.dto.UserCreateStudentRequestDTO;
 import com.techub.api.dto.UserRoleResponse;
 import com.techub.api.dto.UserLoginDataDTO;
 import com.techub.api.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity<?> criar_usuario_aluno(@RequestBody UserCreateStudentRequestDTO dto) {
+    public ResponseEntity<?> criar_usuario_aluno(@Valid @RequestBody UserCreateStudentRequestDTO dto) {
         User user = userService.cadastrarAluno(dto);
         return ResponseEntity.ok( new UserCreateResponseDTO("Usuario criado com sucesso", user.getId()));
     }

@@ -29,4 +29,18 @@ public class FeedController {
 
         return ResponseEntity.ok(feed);
     }
+    @GetMapping("/filter")
+    public ResponseEntity<FeedDTO> getFilteredFeed(
+            @RequestParam(required = false) Long universityId,
+            @RequestParam(required = false) Long courseId,
+            @RequestParam(required = false) Long tagId,
+            @RequestParam(required = false) Integer semestre,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        FeedDTO feed = feedService.getFilteredFeed(
+                universityId, courseId, tagId, semestre, page, size
+        );
+        return ResponseEntity.ok(feed);
+    }
 }

@@ -19,5 +19,10 @@ public class Course {
 
     private String descricao;
 
+    @ManyToOne
+    @JoinColumn(name = "university_id")
+    private University university;
+
+
 
 }

@@ -32,7 +32,7 @@ public class FollowService {
                 followersRepository.findByFollowerId(studentId);
 
         return follows.stream()
-                .map(follow -> follow.getFollowing().getCursoAtual().getId())
+                .map(follow -> follow.getFollowing().getCourse().getId())
                 .distinct()
                 .toList();
     }

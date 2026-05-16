@@ -102,7 +102,7 @@ public class StudentService {
         Course novoCurso = courseRepository.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Curso não encontrado"));
 
-        student.setCursoAtual(novoCurso);
+        student.setCourse(novoCurso);
         studentRepository.save(student);
 
         CourseChange change = new CourseChange();

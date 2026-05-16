@@ -3,9 +3,11 @@ package com.techub.api.service;
 import com.techub.api.domain.Summary;
 import com.techub.api.dto.FeedDTO;
 import com.techub.api.repository.SummaryRepository;
+import com.techub.api.repository.SummarySpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,5 +53,26 @@ public class FeedService {
                     summaries.getTotalElements()
             );
         }
+
+    public FeedDTO getFilteredFeed(Long universityId, Long courseId,
+                                   Long tagId, Integer semestre,
+                                   int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        Specification<Summary> spec = ((Specification<Summary>) (root, query, cb) -> null)
+                .and(SummarySpecification.byCourseId(courseId))
+                .and(SummarySpecification.byUniversityId(universityId))
+                .and(SummarySpecification.byTagId(tagId))
+                .and(SummarySpecification.bySemestre(semestre));
+
+        Page<Summary> summaries = summaryRepository.findAll(spec, pageable);
+
+        return new FeedDTO(
+                summaries.getContent(),
+                summaries.getNumber(),
+                summaries.getSize(),
+                summaries.getTotalElements()
+        );
+    }
 }
 

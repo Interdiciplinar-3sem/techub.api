@@ -61,7 +61,7 @@ public class UserService {
         Course course = courseRepository.findById(dto.cursoId())
                 .orElseThrow(() -> new RuntimeException("Curso não encontrado"));
 
-        student.setCursoAtual(course);
+        student.setCourse(course);
 
         user.setStudent(student);
         user.setRole(Role.ALUNO);

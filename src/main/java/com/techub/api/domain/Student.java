@@ -29,7 +29,7 @@ public class Student {
 
     @ManyToOne
     @JoinColumn(name = "curso_atual_id")
-    private Course cursoAtual;
+    private Course course;
 
     private Integer pontuacao = 0;
 }
