@@ -4,5 +4,7 @@ public record SummaryGetResponseDTO(
         Long studentId,
         Long summaryId,
         String titulo,
-        String conteudo
+        String conteudo,
+        Integer reports,
+        Boolean ativo
 ) {}

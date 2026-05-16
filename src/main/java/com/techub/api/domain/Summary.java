@@ -20,6 +20,12 @@ public class Summary {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String conteudo;
 
+    @Column
+    private Integer reports = 0;
+
+    @Column
+    private Boolean ativo = true;
+
     @ManyToOne
     @JoinColumn(name = "student_id")
     private Student student;

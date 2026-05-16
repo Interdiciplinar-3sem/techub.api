@@ -5,6 +5,7 @@ import com.techub.api.domain.Summary;
 import com.techub.api.dto.SummaryCreateRequestDTO;
 import com.techub.api.dto.SummaryGetResponseDTO;
 import com.techub.api.dto.SummaryUpdateRequestDTO;
+import com.techub.api.dto.UserGetResponseDTO;
 import com.techub.api.service.JwtService;
 import com.techub.api.service.StudentService;
 import com.techub.api.service.SummaryService;
@@ -56,6 +57,16 @@ public class SummaryController {
         return service.getAll();
     }
 
+    @GetMapping("/ativos")
+    public List<SummaryGetResponseDTO> listarResumosAtivados() {
+        return service.findByAtivoTrue()    ;
+    }
+
+    @GetMapping("/desativados")
+    public List<SummaryGetResponseDTO> listarResumosDesativados() {
+        return service.findByAtivoFalse();
+    }
+
     @GetMapping("/{id}")
     public SummaryGetResponseDTO buscar(@PathVariable Long id) {
         return service.getById(id);
@@ -64,6 +75,17 @@ public class SummaryController {
     @PutMapping("/{id}")
     public SummaryGetResponseDTO atualizar(@PathVariable Long id, @RequestBody SummaryUpdateRequestDTO dto) {
         return service.update(id, dto);
+    }
+
+    @PatchMapping("/atualizar_status/{id}")
+    public ResponseEntity<?> atualizar_status(@PathVariable Long id) {
+        service.atualizar_status(id);
+        return ResponseEntity.ok("Sucesso ao atualizar o status do Resumo");
+    }
+    @PatchMapping("/reportar/{id}")
+    public ResponseEntity<?> reportar(@PathVariable Long id) {
+        service.reportar(id);
+        return ResponseEntity.ok("Sucesso ao reportar o Resumo");
     }
 
     @DeleteMapping("/{id}")
