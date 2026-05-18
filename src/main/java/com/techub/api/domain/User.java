@@ -27,6 +27,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String senha;
 
+    @Column
+    private Boolean ativo = true;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private Role role = Role.ALUNO;
@@ -34,6 +37,10 @@ public class User implements UserDetails {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "student_id", unique = true)
     private Student student;
+
+    @OneToOne
+    @JoinColumn(name = "adm_id")
+    private ADM adm;
 
     @Column(name = "created_at", nullable = true)
     @Temporal(TemporalType.TIMESTAMP)

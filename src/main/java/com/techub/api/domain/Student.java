@@ -32,8 +32,9 @@ public class Student {
 
     @ManyToOne
     @JoinColumn(name = "curso_atual_id")
-    private Course cursoAtual;
+    private Course course;
 
+    @Column
     private Integer pontuacao = 0;
 
     @OneToMany(mappedBy = "student")

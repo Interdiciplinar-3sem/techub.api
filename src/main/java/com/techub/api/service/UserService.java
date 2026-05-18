@@ -1,13 +1,9 @@
 package com.techub.api.service;
 
-import com.techub.api.domain.Course;
-import com.techub.api.domain.Role;
-import com.techub.api.domain.Student;
-import com.techub.api.domain.User;
-import com.techub.api.dto.UserCreateStudentRequestDTO;
-import com.techub.api.dto.UserRoleResponse;
-import com.techub.api.dto.UserLoginDataDTO;
+import com.techub.api.domain.*;
+import com.techub.api.dto.*;
 import com.techub.api.exception.EmailAlredyExistsExeception;
+import com.techub.api.repository.ADMRepository;
 import com.techub.api.repository.CourseRepository;
 import com.techub.api.repository.UserRepository;
 import jakarta.validation.constraints.Email;
@@ -26,12 +22,17 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private ADMRepository admRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     private CourseRepository courseRepository;
 
     public User criarUsuario(User user) {
+
+        user.setAtivo(true);
 
         // valida email
         if (userRepository.existsByEmail(user.getEmail())) {
@@ -61,10 +62,27 @@ public class UserService {
         Course course = courseRepository.findTopByOrderByIdAsc()
                 .orElseThrow(() -> new RuntimeException("Curso padrão não encontrado"));
 
-        student.setCursoAtual(course);
+        student.setCourse(course);
+
         user.setStudent(student);
         user.setRole(Role.ALUNO);
 
+        return criarUsuario(user);
+    }
+
+    @Transactional
+    public User cadastrarADM(ADMCreateRequestDTO dto){
+        User user = new User();
+        user.setEmail(dto.email());
+        user.setSenha(dto.senha());
+
+        ADM adm = new ADM();
+        adm.setUsername(dto.username());
+
+        ADM admSalvo = admRepository.save(adm);
+
+        user.setAdm(admSalvo);
+        user.setRole(Role.ADM);
         return criarUsuario(user);
     }
 
@@ -78,8 +96,32 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public List<User> listar() {
-        return userRepository.findAll();
+    public List<UserGetResponseDTO> findByAtivoTrue() {
+
+        return userRepository.findByAtivoTrue()
+                .stream()
+                .map(user -> new UserGetResponseDTO(
+                        user.getId(),
+                        Optional.ofNullable(user.getStudent()).map(s -> s.getId()).orElse(null),
+                        user.getEmail(),
+                        user.getRole(),
+                        user.getCreatedAt(),
+                        user.getAtivo()
+                )).toList();
+    }
+
+    public List<UserGetResponseDTO> findByAtivoFalse() {
+
+        return userRepository.findByAtivoFalse()
+                .stream()
+                .map(user -> new UserGetResponseDTO(
+                        user.getId(),
+                        Optional.ofNullable(user.getStudent()).map(s -> s.getId()).orElse(null),
+                        user.getEmail(),
+                        user.getRole(),
+                        user.getCreatedAt(),
+                        user.getAtivo()
+                )).toList();
     }
 
     public Optional<User> buscar_por_id(Long id) {
@@ -92,6 +134,15 @@ public class UserService {
 
     public void deletar(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void atualizar_status(Long id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Erro ao procurar usuario"));
+
+        user.setAtivo(!user.getAtivo());
+        userRepository.save(user);
     }
 
     public UserRoleResponse descobrirRole(Long id) {

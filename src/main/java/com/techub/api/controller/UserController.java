@@ -1,16 +1,16 @@
 package com.techub.api.controller;
 
+import com.techub.api.domain.Role;
 import com.techub.api.domain.User;
 
-import com.techub.api.dto.UserCreateResponseDTO;
-import com.techub.api.dto.UserCreateStudentRequestDTO;
-import com.techub.api.dto.UserRoleResponse;
-import com.techub.api.dto.UserLoginDataDTO;
+import com.techub.api.dto.*;
 import com.techub.api.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -21,14 +21,25 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity<?> criar_usuario_aluno(@RequestBody UserCreateStudentRequestDTO dto) {
+    public ResponseEntity<?> criar_usuario_aluno(@Valid @RequestBody UserCreateStudentRequestDTO dto) {
         User user = userService.cadastrarAluno(dto);
         return ResponseEntity.ok( new UserCreateResponseDTO("Usuario criado com sucesso", user.getId()));
     }
 
+    @PostMapping("/adm")
+    public ResponseEntity<?> criar_usuario_adm(ADMCreateRequestDTO dto){
+        userService.cadastrarADM(dto);
+        return ResponseEntity.ok("Sucesso ao criar ADM");
+    }
+
     @GetMapping
-    public List<User> listarUser() {
-        return userService.listar();
+    public List<UserGetResponseDTO> listarUser() {
+        return userService.findByAtivoTrue();
+    }
+
+    @GetMapping("/desativados")
+    public List<UserGetResponseDTO> listarUserDesativados() {
+        return userService.findByAtivoFalse();
     }
 
     //localhost:8080/api/usuarios/3
@@ -48,6 +59,12 @@ public class UserController {
     public String deletarUserPorId(@PathVariable Long id) {
         userService.deletar(id);
         return "Dados apagados com sucesso!";
+    }
+
+    @PatchMapping("/atualizar_status/{id}")
+    public ResponseEntity<?> atualizar_status(@PathVariable Long id){
+        userService.atualizar_status(id);
+        return ResponseEntity.ok("Sucesso ao ativar ADM");
     }
 
     @GetMapping("/role/{id}")
